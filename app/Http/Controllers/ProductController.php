@@ -14,6 +14,7 @@ class ProductController extends Controller
     public function index(Request $request) // <-- Tambahkan Request $request
     {
         // Modifikasi query untuk Eager Loading dan Search
+        $query = Product::query();
         $query = Product::with('supplier'); // [cite: 65, 228]
 
         if ($request->has('search') && $request->search != '') { // [cite: 67]
@@ -23,10 +24,10 @@ class ProductController extends Controller
             });
         }
 
-        $data = $query->paginate(2); // [cite: 76]
+        $products = $query->paginate(2); 
         
         // Return view with data
-        return view("master-data.product-master.index-product", compact('data'));
+        return view('master-data.product-master.index-product', compact('products'));
     }
 
     /**
@@ -65,7 +66,8 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $product = Product::findOrFail($id);
+        return view("master-data.product-master.detail-product", compact('product'));
     }
 
     /**
